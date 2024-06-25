@@ -1,0 +1,16 @@
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+    * {
+        font-family: Tiny5;
+    }
+
+    h1 {
+        font-size: 75px;
+    }
+    img {
+        width: 600px;
+    }
+     button {
+        margin-left: auto;
+    }
+</style>
