@@ -1,0 +1,89 @@
+   @import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+    * {
+        font-family: Tiny5;
+    }
+
+
+    img {
+        width: 600px;
+    }
+     button {
+        margin-left: auto;
+    }
+h1 {
+    font-size: 75px;
+    color: #0021f3;
+    font-style: italic;
+    margin: 0;
+
+    margin-right: 40px;
+}
+
+img {
+    width: 200px;
+    height: 200px;
+}
+
+.product {
+    display: flex;
+    flex-direction: row;
+
+    height: 250px;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px;
+
+    width: 60%;
+}
+
+
+.productList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+h2 {
+    width: 300px;
+}
+
+p {
+    width: 700px;
+}
+
+button {
+    margin-left: auto;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    padding: 0;
+    margin: 0;
+    height: 70px;
+}
+
+a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #0021f3;
+    font-size: 20px;
+}
+
+button {
+    height: 50px;
+    width: 100px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.price {
+    margin-left: auto;
+    text-align: center;
+}

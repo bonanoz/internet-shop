@@ -1,22 +1,39 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'style.css' %}">
-<h1><span style="color: 00ff00">Banana</span>Shop</h1>
+
+<div class="navigation">
+
+    <h1><span style="color: 00ff00">Banana</span>Shop</h1>
 
     <a href ="">Главная</a>
     <a href ="/products">Товары</a>
     <a href ="/us">О нас</a>
-
-<div style='border: 5px black solid'>
-        <h2>Майнкрафт</h2>
-        <img src='https://3dnews.ru/assets/external/illustrations/2024/06/23/1106916/minecraft_title.jpg'>
-        <p>МАЙНКРААААААААААФТ</p>
-    </div>
-    <button>Купить</button>
 </div>
 
-<div style='border: 5px black solid'>
-        <h2>боблокс</h2>
-        <img src='https://i.ytimg.com/vi/v7s48fpanCw/maxresdefault.jpg'>
-        <p>бобухи бесплатно</p>
+<div class="productList">
+<div class="product" style='border: 5px black solid'>
+
+        <img src='https://3dnews.ru/assets/external/illustrations/2024/06/23/1106916/minecraft_title.jpg'>
+        <div>
+        <h2>Майнкрафт</h2>
+        <p>МАЙНКРААААААААААФТ</p>
     </div>
-    <button>Купить</button>
+    </div>
+    <div class="price">
+        <h3>2 000 ₽</h3>
+        <button>Купить</button>
+    </div>
+
+
+<div class="product" style='border: 5px black solid'>
+       <img src='https://i.ytimg.com/vi/v7s48fpanCw/maxresdefault.jpg'>
+      <div>
+    <h2>роблокс</h2>
+        <p>робуксы бесплатно</p>
+    </div>
+    </div>
+    <div class="price">
+        <h3>0 ₽</h3>
+        <button>Купить</button>
+    </div>
+</div>
