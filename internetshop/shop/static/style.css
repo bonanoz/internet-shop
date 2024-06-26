@@ -1,4 +1,11 @@
    @import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+    html, body {
+    background-color: #ececec;
+    padding: 0;
+    margin: 0;
+}
+
+
     * {
         font-family: Tiny5;
     }
@@ -20,14 +27,14 @@ h1 {
 }
 
 img {
-    width: 200px;
+    width: 500px;
     height: 200px;
 }
 
 .product {
     display: flex;
     flex-direction: row;
-
+    border: 5px black solid
     height: 250px;
     margin-top: 20px;
     background-color: white;
@@ -42,6 +49,7 @@ img {
     display: flex;
     flex-direction: column;
     align-items: center;
+
 }
 
 

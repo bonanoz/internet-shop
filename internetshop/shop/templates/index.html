@@ -11,7 +11,7 @@
 </div>
 
 <div class="productList">
-<div class="product" style='border: 5px black solid'>
+<div class="product" >
 
         <img src='https://3dnews.ru/assets/external/illustrations/2024/06/23/1106916/minecraft_title.jpg'>
         <div>
@@ -25,7 +25,7 @@
     </div>
 
 
-<div class="product" style='border: 5px black solid'>
+<div class="product" >
        <img src='https://cybersport.metaratings.ru/upload/iblock/d01/d018631f69c4a99ebb0070cd0f90fb5b.jpg'>
       <div>
     <h2>роблокс</h2>
@@ -37,3 +37,17 @@
         <button>Купить</button>
     </div>
 </div>
+{% for product in products %}
+<div class="product">
+    <img src="{{ product.image_url }}"/>
+    <div>
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.description }}</p>
+    </div>
+
+    <div class="price">
+        <h3>{{ product.price }} ₽</h3>
+        <button>Купить</button>
+    </div>
+</div>
+{% endfor %}
