@@ -11,12 +11,17 @@
     }
 
 
-    img {
+    .productPreview {
         width: 600px;
+        height: 600px;
     }
      button {
         margin-left: auto;
     }
+    .productImage {
+    max-width: 50%;
+}
+
 h1 {
     font-size: 75px;
     color: #0021f3;
@@ -26,16 +31,12 @@ h1 {
     margin-right: 40px;
 }
 
-img {
-    width: 500px;
-    height: 200px;
-}
+
 
 .product {
     display: flex;
     flex-direction: row;
-    border: 5px black solid
-    height: 250px;
+    min-height: 250px;
     margin-top: 20px;
     background-color: white;
     border-radius: 20px;
@@ -53,13 +54,7 @@ img {
 }
 
 
-h2 {
-    width: 300px;
-}
 
-p {
-    width: 700px;
-}
 
 button {
     margin-left: auto;
@@ -94,4 +89,75 @@ button {
 .price {
     margin-left: auto;
     text-align: center;
+}
+
+.productDetails {
+    margin-top: 20px;
+    border-radius: 20px;
+    background: white;
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.productPrice {
+    display: flex;
+    flex-direction: row;
+}
+.productTitle {
+    margin-top: 20px;
+}
+
+.productTitle * {
+    font-style: normal;
+    margin-bottom: 20px;
+}
+
+.productDescription {
+    margin-top: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    border-radius: 20px;
+
+    background: white;
+
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.productDescription * {
+    margin: 20px;
+}
+
+
+.filter {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border-radius: 20px;
+    padding: 10px;
+    margin-top: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.searchInput {
+    font-size: 20px;
+    border: none;
+    background-color: #efefef;
+    padding: 11px;
+    border-radius: 10px;
+    width: 100%;
+    margin-right: 10px;
+}
+.review {
+    background-color: #efefef;
+    padding: 10px;
+    border-radius: 10px;
 }
