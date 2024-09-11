@@ -7,7 +7,6 @@
 
 <a class="navlink" href="/">Главная</a>
 <a class="navlink" href="/products">Товары</a>
-<a class="navlink" href="/aboutus">О нас</a>
 </div>
 <div class="productDetails">
     <img class="productImage" src="{{ product.image_url }}">
@@ -15,7 +14,9 @@
         <h1>{{ product.name }}</h1>
         <div class="productPrice">
             <h3>{{ product.price }} ₽</h3>
-        <button>Купить</button>
+        <a href="/payment/{{ product.id }}">
+                <button>Купить</button>
+            </a>
         </div>
     </div>
 </div>
@@ -24,11 +25,3 @@
     <p>{{ product.description }}</p>
 </div>
 
-<div class="productDescription">
-    <h2>Отзывы:</h2>
-    <div class="review">
-        <h3>Автор</h3>
-        <h3>Оценка: <span style="color: green">положительная</span></h3>
-        <h3>Срок использования: 12 месяцев</h3>
-        <p>Отзыв</p>
-    </div>

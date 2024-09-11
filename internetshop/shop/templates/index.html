@@ -1,4 +1,5 @@
 {% load static %}
+<base href="/">
 <link rel="stylesheet" href="{% static 'style.css' %}">
 
 <div class="navigation">
@@ -7,7 +8,6 @@
 
 <a class="navlink" href="/">Главная</a>
 <a class="navlink" href="/products">Товары</a>
-<a class="navlink" href="/aboutus">О нас</a>
 </div>
 <form class="filter">
     <input class="searchInput" name="search" value="{{ search }}" placeholder="Название товара" />
@@ -39,7 +39,9 @@
 
     <div class="price">
         <h3>{{ product.price }} ₽</h3>
-        <button>Купить</button>
+        <a href="/payment/{{ product.id }}">
+            <button>Купить</button>
+        </a>
     </div>
 </div>
 {% endfor %}

@@ -1,4 +1,4 @@
-   @import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+   @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
     html, body {
     background-color: #ececec;
     padding: 0;
@@ -7,7 +7,9 @@
 
 
     * {
-        font-family: Tiny5;
+        font-family: "Russo One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
     }
 
 
@@ -24,7 +26,7 @@
 
 h1 {
     font-size: 75px;
-    color: #0021f3;
+    color: #00B300;
     font-style: italic;
     margin: 0;
 
@@ -159,5 +161,39 @@ button {
 .review {
     background-color: #efefef;
     padding: 10px;
+    border-radius: 10px;
+}
+.paymentCard {
+    margin-top: 20px;
+
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+    text-align: center;
+
+    border-radius: 20px;
+    background: white;
+
+    padding: 10px;
+}
+.vspace {
+    height: 10px;
+}
+
+.paymentButton {
+    width: 100%;
+}
+.paymentForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.paymentForm input {
+    background-color: #e0e0e0;
+    padding: 5px !important;
+
+    font-size: 20px;
+    border: none;
+    padding: 11px;
     border-radius: 10px;
 }

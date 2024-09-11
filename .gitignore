@@ -1,3 +1,4 @@
 .venv/
 internetshop/db.sqlite3
 .gitignore/
+internetshop/shop/config.py
