@@ -21,9 +21,9 @@
                 <div class="cart-item" data-line="{{ item.line_id }}" data-unit-price="{{ item.unit_price }}">
                     <a href="{{ item.product.get_absolute_url }}" class="cart-item__media">
                         {% if item.product.main_image %}
-                        <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}">
+                        <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" loading="lazy" decoding="async">
                         {% else %}
-                        <img src="{% static 'img/placeholders/product.svg' %}" alt="{{ item.product.name }}">
+                        <img src="{% static 'img/placeholders/product.svg' %}" alt="{{ item.product.name }}" loading="lazy" decoding="async">
                         {% endif %}
                     </a>
                     <div class="cart-item__body">

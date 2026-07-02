@@ -16,9 +16,9 @@
                 <div class="checkout-line">
                     <div class="checkout-line__media">
                         {% if item.product.main_image %}
-                        <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}">
+                        <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" loading="lazy" decoding="async">
                         {% else %}
-                        <img src="{% static 'img/placeholders/product.svg' %}" alt="{{ item.product.name }}">
+                        <img src="{% static 'img/placeholders/product.svg' %}" alt="{{ item.product.name }}" loading="lazy" decoding="async">
                         {% endif %}
                     </div>
                     <div>
@@ -38,29 +38,29 @@
             <!-- Форма контактов -->
             <form method="post" class="lead-form" data-once>
                 {% csrf_token %}
-                {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+                {% if form.non_field_errors %}<div class="form-errors" role="alert" aria-live="polite">{{ form.non_field_errors }}</div>{% endif %}
 
                 <div class="form-field">
-                    <label>Ваше имя</label>
+                    <label for="{{ form.customer_name.id_for_label }}">Ваше имя</label>
                     {{ form.customer_name }}
-                    {% if form.customer_name.errors %}<div class="form-errors">{{ form.customer_name.errors|join:", " }}</div>{% endif %}
+                    {% if form.customer_name.errors %}<div class="form-errors" role="alert" aria-live="polite">{{ form.customer_name.errors|join:", " }}</div>{% endif %}
                 </div>
                 <div class="form-field">
-                    <label>Телефон</label>
+                    <label for="{{ form.customer_phone.id_for_label }}">Телефон</label>
                     {{ form.customer_phone }}
-                    {% if form.customer_phone.errors %}<div class="form-errors">{{ form.customer_phone.errors|join:", " }}</div>{% endif %}
+                    {% if form.customer_phone.errors %}<div class="form-errors" role="alert" aria-live="polite">{{ form.customer_phone.errors|join:", " }}</div>{% endif %}
                 </div>
                 <div class="form-field">
-                    <label>Email <span class="muted">(необязательно)</span></label>
+                    <label for="{{ form.customer_email.id_for_label }}">Email <span class="muted">(необязательно)</span></label>
                     {{ form.customer_email }}
-                    {% if form.customer_email.errors %}<div class="form-errors">{{ form.customer_email.errors|join:", " }}</div>{% endif %}
+                    {% if form.customer_email.errors %}<div class="form-errors" role="alert" aria-live="polite">{{ form.customer_email.errors|join:", " }}</div>{% endif %}
                 </div>
                 <div class="form-field">
-                    <label>Адрес доставки <span class="muted">(необязательно)</span></label>
+                    <label for="{{ form.delivery_address.id_for_label }}">Адрес доставки <span class="muted">(необязательно)</span></label>
                     {{ form.delivery_address }}
                 </div>
                 <div class="form-field">
-                    <label>Комментарий</label>
+                    <label for="{{ form.comment.id_for_label }}">Комментарий</label>
                     {{ form.comment }}
                 </div>
 

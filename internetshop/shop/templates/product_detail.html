@@ -32,9 +32,9 @@
                 </div>
                 {% if product.gallery.all %}
                 <div class="gallery__thumbs">
-                    {% if product.main_image %}<img src="{{ product.main_image.url }}" data-full="{{ product.main_image.url }}" class="active" alt="{{ product.name }}">{% endif %}
+                    {% if product.main_image %}<img src="{{ product.main_image.url }}" data-full="{{ product.main_image.url }}" class="active" alt="{{ product.name }}" loading="lazy" decoding="async">{% endif %}
                     {% for img in product.gallery.all %}
-                    <img src="{{ img.image.url }}" data-full="{{ img.image.url }}" alt="{{ product.name }} — фото {{ forloop.counter }}">
+                    <img src="{{ img.image.url }}" data-full="{{ img.image.url }}" alt="{{ product.name }} — фото {{ forloop.counter }}" loading="lazy" decoding="async">
                     {% endfor %}
                 </div>
                 {% endif %}

@@ -21,7 +21,7 @@
                 <circle cx="9" cy="20" r="1.4"></circle>
                 <circle cx="18" cy="20" r="1.4"></circle>
             </svg>
-            <span class="header-cart__count" data-cart-count{% if not cart.count %} hidden{% endif %}>{{ cart.count }}</span>
+            <span class="header-cart__count" data-cart-count aria-live="polite"{% if not cart.count %} hidden{% endif %}>{{ cart.count }}</span>
         </a>
 
         <button class="nav-toggle" aria-label="Меню" aria-expanded="false">

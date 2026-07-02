@@ -7,8 +7,9 @@
     var nav = document.querySelector('.nav');
     if (toggle && nav) {
         toggle.addEventListener('click', function () {
-            nav.classList.toggle('open');
+            var isOpen = nav.classList.toggle('open');
             toggle.classList.toggle('active');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
     }
 
@@ -35,6 +36,7 @@
             var panel = item.querySelector('.accordion-panel');
             var isOpen = item.classList.toggle('open');
             panel.style.maxHeight = isOpen ? panel.scrollHeight + 'px' : null;
+            trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
     });
 })();

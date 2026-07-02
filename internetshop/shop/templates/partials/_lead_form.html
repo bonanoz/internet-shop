@@ -4,23 +4,27 @@
 {% endcomment %}
 <form method="post" class="lead-form" data-once>
     {% csrf_token %}
-    {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+    {% if form.non_field_errors %}<div class="form-errors" role="alert" aria-live="polite">{{ form.non_field_errors }}</div>{% endif %}
 
     <div class="form-field">
+        <label for="{{ form.name.id_for_label }}">Ваше имя</label>
         {{ form.name }}
-        {% if form.name.errors %}<div class="form-errors">{{ form.name.errors|join:", " }}</div>{% endif %}
+        {% if form.name.errors %}<div class="form-errors" role="alert" aria-live="polite">{{ form.name.errors|join:", " }}</div>{% endif %}
     </div>
     <div class="form-field">
+        <label for="{{ form.phone.id_for_label }}">Телефон</label>
         {{ form.phone }}
-        {% if form.phone.errors %}<div class="form-errors">{{ form.phone.errors|join:", " }}</div>{% endif %}
+        {% if form.phone.errors %}<div class="form-errors" role="alert" aria-live="polite">{{ form.phone.errors|join:", " }}</div>{% endif %}
     </div>
     <div class="form-field">
+        <label for="{{ form.email.id_for_label }}">Email <span class="muted">(необязательно)</span></label>
         {{ form.email }}
-        {% if form.email.errors %}<div class="form-errors">{{ form.email.errors|join:", " }}</div>{% endif %}
+        {% if form.email.errors %}<div class="form-errors" role="alert" aria-live="polite">{{ form.email.errors|join:", " }}</div>{% endif %}
     </div>
     <div class="form-field">
+        <label for="{{ form.message.id_for_label }}">Сообщение</label>
         {{ form.message }}
-        {% if form.message.errors %}<div class="form-errors">{{ form.message.errors|join:", " }}</div>{% endif %}
+        {% if form.message.errors %}<div class="form-errors" role="alert" aria-live="polite">{{ form.message.errors|join:", " }}</div>{% endif %}
     </div>
     {{ form.lead_type }}
 
