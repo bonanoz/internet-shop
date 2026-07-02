@@ -1,0 +1,53 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+
+    {% block meta %}
+    <title>{% block meta_title %}Дизайнерская мебель ручной работы | Производитель мебели из ротанга{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Ищете эксклюзивную дизайнерскую мебель? Мы — производитель мебели из ротанга, создающий мебель ручной работы. Уникальная плетеная мебель и мебель плетеная из ротанга премиум-класса. Откройте мир природного уюта.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}дизайнерская мебель, ручная мебель, плетеная мебель, мебель плетеная из ротанга, производитель мебели из ротанга, мебель ручной работы{% endblock %}">
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{% block og_title %}Плетеная мебель из ротанга и роупа ручной работы для дома и бизнеса{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Плетёная мебель ручной работы для дома, дачи и бизнеса. Гарантия 3 года, доставка по России от 3 дней.{% endblock %}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/placeholders/hero.svg' %}{% endblock %}">
+    {% endblock %}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/variables.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% include 'partials/_header.html' %}
+
+    <main>
+        {% if messages %}
+        <div class="container" style="padding-top: var(--space-4);">
+            {% for message in messages %}
+            <div class="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'partials/_footer.html' %}
+
+    <script src="{% static 'js/main.js' %}" defer></script>
+    <script src="{% static 'js/forms.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

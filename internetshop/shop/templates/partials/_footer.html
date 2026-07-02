@@ -1,0 +1,48 @@
+{% load static %}
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="{% url 'home' %}" class="brand" style="font-size:1.5rem;">{{ site_info.brand_name }}</a>
+                <p style="margin-top:var(--space-3); max-width:320px; opacity:0.8;">
+                    Плетёная мебель ручной работы для дома, дачи и бизнеса.
+                    Каждое изделие — инвестиция в атмосферу.
+                </p>
+                <div class="footer-socials">
+                    <a href="{{ site_info.social_links.instagram }}" target="_blank" rel="noopener">Instagram</a>
+                    <a href="{{ site_info.social_links.telegram }}" target="_blank" rel="noopener">Telegram</a>
+                    <a href="{{ site_info.social_links.whatsapp }}" target="_blank" rel="noopener">WhatsApp</a>
+                    <a href="{{ site_info.social_links.vk }}" target="_blank" rel="noopener">VK</a>
+                    <a href="{{ site_info.social_links.pinterest }}" target="_blank" rel="noopener">Pinterest</a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Разделы</h4>
+                <a href="{% url 'catalog_list' %}">Каталог</a>
+                <a href="{% url 'b2b_page' %}">Для бизнеса</a>
+                <a href="{% url 'designers_page' %}">Для дизайнеров</a>
+                <a href="{% url 'about_page' %}">О нас и производство</a>
+                <a href="{% url 'delivery_payment_page' %}">Доставка и оплата</a>
+                <a href="{% url 'warranty_page' %}">Гарантия и возврат</a>
+                <a href="{% url 'faq_page' %}">Вопросы и ответы</a>
+            </div>
+
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <a href="tel:{{ site_info.phone_href }}">{{ site_info.phone }}</a>
+                <a href="mailto:{{ site_info.email }}">{{ site_info.email }}</a>
+                <p>{{ site_info.address }}</p>
+                {% for label, hours in site_info.work_hours %}
+                <p style="opacity:0.75;">{{ label }}: {{ hours }}</p>
+                {% endfor %}
+                <p style="opacity:0.6; font-size:0.85rem;">{{ site_info.work_hours_note }}</p>
+            </div>
+        </div>
+
+        <div class="footer-legal">
+            <span>{{ site_info.legal_name }} · ИНН {{ site_info.inn }} · ОГРНИП {{ site_info.ogrnip }}</span>
+            <span>© {{ site_info.brand_name }}. Информация на сайте не является публичной офертой.</span>
+        </div>
+    </div>
+</footer>

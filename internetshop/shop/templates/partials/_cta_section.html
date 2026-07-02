@@ -1,0 +1,14 @@
+{% comment %} Финальный CTA-блок. Опциональные переменные: cta_title, cta_text {% endcomment %}
+<section class="section">
+    <div class="container">
+        <div class="cta-band" data-reveal>
+            <span class="eyebrow">Начните проект</span>
+            <h2>{{ cta_title|default:"Обсудим вашу мебель?" }}</h2>
+            <p>{{ cta_text|default:"Оставьте заявку — рассчитаем стоимость, подберём модели и материалы под вашу задачу. Гарантия 3 года, доставка по России от 3 дней." }}</p>
+            <div style="margin-top:var(--space-4); display:flex; gap:var(--space-3); justify-content:center; flex-wrap:wrap;">
+                <a href="{% url 'contacts_page' %}" class="btn btn-primary btn-lg">Оставить заявку</a>
+                <a href="tel:{{ site_info.phone_href }}" class="btn btn-light btn-lg">{{ site_info.phone }}</a>
+            </div>
+        </div>
+    </div>
+</section>

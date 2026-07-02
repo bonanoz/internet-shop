@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Контакты — ESTIVO, Тольятти{% endblock %}
+{% block meta_description %}Контакты ESTIVO: телефон {{ site_info.phone }}, {{ site_info.email }}, {{ site_info.address }}. Оставьте заявку — свяжемся в ближайшее время.{% endblock %}
+
+{% block content %}
+<section class="section-sm">
+    <div class="container">
+        <div class="section-head">
+            <span class="eyebrow">Контакты</span>
+            <h1>Свяжитесь с нами</h1>
+        </div>
+    </div>
+</section>
+
+<section class="section-sm">
+    <div class="container">
+        <div class="split">
+            <div>
+                <ul class="spec-list">
+                    <li><span>Телефон</span><span><a href="tel:{{ site_info.phone_href }}">{{ site_info.phone }}</a></span></li>
+                    <li><span>Email</span><span><a href="mailto:{{ site_info.email }}">{{ site_info.email }}</a></span></li>
+                    <li><span>Адрес</span><span>{{ site_info.address }}</span></li>
+                    {% for label, hours in site_info.work_hours %}
+                    <li><span>{{ label }}</span><span>{{ hours }}</span></li>
+                    {% endfor %}
+                </ul>
+                <p class="muted">{{ site_info.work_hours_note }}</p>
+                <div class="footer-socials" style="margin-top:var(--space-3);">
+                    <a href="{{ site_info.social_links.instagram }}" target="_blank" rel="noopener" style="color:var(--color-accent);">Instagram</a>
+                    <a href="{{ site_info.social_links.telegram }}" target="_blank" rel="noopener" style="color:var(--color-accent);">Telegram</a>
+                    <a href="{{ site_info.social_links.whatsapp }}" target="_blank" rel="noopener" style="color:var(--color-accent);">WhatsApp</a>
+                    <a href="{{ site_info.social_links.vk }}" target="_blank" rel="noopener" style="color:var(--color-accent);">VK</a>
+                </div>
+            </div>
+            <div>
+                <div class="section-head"><h2 style="font-size:1.9rem;">Оставить заявку</h2></div>
+                {% include 'partials/_lead_form.html' %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-sm">
+    <div class="container">
+        <iframe src="https://yandex.ru/map-widget/v1/?text={{ site_info.address|urlencode }}&z=16"
+                width="100%" height="380" frameborder="0" style="border-radius:var(--radius-lg);"
+                title="Карта — {{ site_info.address }}"></iframe>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp@latest"],
+      "enabled": true
+    },
+    "postgres": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "mcp-postgres",
+        "postgresql://DB_USER:DB_PASSWORD@DB_HOST:DB_PORT/DB_NAME"
+      ],
+      "enabled": true
+    },
+    "context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/context7-mcp"],
+      "enabled": true
+    }
+  }
+}

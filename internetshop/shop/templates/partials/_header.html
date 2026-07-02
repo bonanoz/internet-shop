@@ -1,0 +1,21 @@
+{% load static %}
+<header class="site-header">
+    <div class="container header-inner">
+        <a href="{% url 'home' %}" class="brand">{{ site_info.brand_name }}</a>
+
+        <nav class="nav" aria-label="Основная навигация">
+            <a href="{% url 'catalog_list' %}">Каталог</a>
+            <a href="{% url 'b2b_page' %}">Бизнесу</a>
+            <a href="{% url 'designers_page' %}">Дизайнерам</a>
+            <a href="{% url 'about_page' %}">О нас</a>
+            <a href="{% url 'delivery_payment_page' %}">Доставка</a>
+            <a href="{% url 'faq_page' %}">FAQ</a>
+            <a href="{% url 'contacts_page' %}">Контакты</a>
+            <a href="tel:{{ site_info.phone_href }}" class="header-phone">{{ site_info.phone }}</a>
+        </nav>
+
+        <button class="nav-toggle" aria-label="Меню" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</header>

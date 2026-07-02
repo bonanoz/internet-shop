@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_title %}{{ meta_title|default:"Каталог плетёной мебели ручной работы | ESTIVO" }}{% endblock %}
+{% block meta_description %}{{ meta_description|default:"Каталог плетёной мебели ручной работы ESTIVO: кресла, диваны, столы, шезлонги и комплекты из роупа и ротанга. Гарантия 3 года." }}{% endblock %}
+
+{% block content %}
+<section class="section-sm">
+    <div class="container">
+        {% include 'partials/_breadcrumbs.html' with crumbs=breadcrumbs %}
+        <div class="section-head">
+            <span class="eyebrow">Каталог</span>
+            <h1 style="font-size:clamp(2.2rem,4vw,3.4rem);">
+                {% if current_category %}{{ current_category.name }} из {{ current_material.name|lower }}
+                {% elif current_material %}{{ current_material.name }}
+                {% else %}Вся мебель{% endif %}
+            </h1>
+        </div>
+
+        <!-- Фильтры по материалам -->
+        <div class="filter-pills">
+            <a href="{% url 'catalog_list' %}" class="pill {% if not current_material %}active{% endif %}">Все</a>
+            {% for m in materials %}
+            <a href="{% url 'catalog_by_material' m.slug %}" class="pill {% if current_material.slug == m.slug %}active{% endif %}">{{ m.name }}</a>
+            {% endfor %}
+        </div>
+
+        <!-- Фильтры по категориям (в контексте текущего материала) -->
+        {% if categories and current_material %}
+        <div class="filter-pills">
+            {% for c in categories %}
+            <a href="{% url 'catalog_by_category' current_material.slug c.slug %}" class="pill {% if current_category.slug == c.slug %}active{% endif %}">{{ c.name }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Поиск -->
+        <form method="get" class="filter-pills" style="margin-bottom:var(--space-5);">
+            <input type="search" name="search" value="{{ search }}" placeholder="Поиск по каталогу…" class="form-input" style="max-width:340px;">
+            <button type="submit" class="btn btn-outline">Найти</button>
+        </form>
+
+        {% if page_obj %}
+        <div class="grid grid-4">
+            {% for product in page_obj %}
+                {% include 'partials/_product_card.html' %}
+            {% endfor %}
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}">← Назад</a>{% endif %}
+            <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}">Вперёд →</a>{% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <p class="lead muted" style="padding:var(--space-6) 0; text-align:center;">По вашему запросу пока ничего не найдено. Попробуйте другой раздел или оставьте заявку — подберём под задачу.</p>
+        {% endif %}
+    </div>
+</section>
+
+{% include 'partials/_cta_section.html' %}
+{% endblock %}

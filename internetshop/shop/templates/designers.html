@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_title %}Индивидуальные дизайн-проекты плетёной мебели | ESTIVO{% endblock %}
+{% block meta_description %}Разработаем плетёную мебель по вашему эскизу. Индивидуальные размеры, цвета и материалы. Сотрудничество с дизайнерами и архитекторами — ESTIVO.{% endblock %}
+
+{% block content %}
+<section class="section-sm">
+    <div class="container">
+        <div class="section-head">
+            <span class="eyebrow">Дизайнерам и архитекторам</span>
+            <h1>Превращаем эскизы в атмосферу</h1>
+            <p class="lead">От идеи до пространства, в которое влюбляются снова и снова. Изготовим мебель по вашему проекту — с нужными размерами, цветом каркаса и материалами.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="split reverse">
+            <div class="split__media"><img src="{% static 'img/placeholders/collection.svg' %}" alt="Индивидуальный проект ESTIVO"></div>
+            <div>
+                <span class="eyebrow">Что мы даём дизайнеру</span>
+                <h2>Гибкость производства полного цикла</h2>
+                <ul>
+                    <li>Изменение размеров и конструкции под проект.</li>
+                    <li>Выбор материала: роуп, эко-ротанг, шпон, HPL.</li>
+                    <li>Каркасы из стали или алюминия, порошковая окраска в любой цвет.</li>
+                    <li>Согласование по фото и видео перед отправкой.</li>
+                </ul>
+                <a href="#zayavka" class="btn btn-primary btn-lg" style="margin-top:var(--space-3);">Обсудить дизайн-проект</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt" id="zayavka">
+    <div class="container container-narrow">
+        <div class="section-head center">
+            <span class="eyebrow">Заявка на проект</span>
+            <h2>Расскажите о вашей идее</h2>
+        </div>
+        {% include 'partials/_lead_form.html' %}
+    </div>
+</section>
+{% endblock %}

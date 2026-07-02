@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_title %}Оформление заявки — {{ product.name }} | ESTIVO{% endblock %}
+{% block meta_description %}Оформление заявки на {{ product.name }}. Менеджер свяжется с вами для уточнения деталей.{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="section-head"><span class="eyebrow">Заявка на товар</span><h1>Оформление заявки</h1></div>
+
+        <div class="order-layout">
+            <!-- Сводка по товару -->
+            <div class="order-summary">
+                <div class="order-summary__media">
+                    {% if product.main_image %}
+                    <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                    <img src="{% static 'img/placeholders/product.svg' %}" alt="{{ product.name }}">
+                    {% endif %}
+                </div>
+                <div class="order-summary__body">
+                    {% if product.material %}<div class="product-card__meta">{{ product.material.name }}{% if product.category %} · {{ product.category.name }}{% endif %}</div>{% endif %}
+                    <h3>{{ product.name }}</h3>
+                    <div class="product-detail__price" style="font-size:1.8rem;"><small style="font-family:var(--font-body);font-size:0.9rem;color:var(--color-ink-muted);">от</small> {{ product.price }} ₽</div>
+                </div>
+            </div>
+
+            <!-- Форма -->
+            <form method="post" class="lead-form" data-once>
+                {% csrf_token %}
+                {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+
+                <div class="form-field">
+                    <label>Ваше имя</label>
+                    {{ form.customer_name }}
+                    {% if form.customer_name.errors %}<div class="form-errors">{{ form.customer_name.errors|join:", " }}</div>{% endif %}
+                </div>
+                <div class="form-field">
+                    <label>Телефон</label>
+                    {{ form.customer_phone }}
+                    {% if form.customer_phone.errors %}<div class="form-errors">{{ form.customer_phone.errors|join:", " }}</div>{% endif %}
+                </div>
+                <div class="form-field">
+                    <label>Email <span class="muted">(необязательно)</span></label>
+                    {{ form.customer_email }}
+                    {% if form.customer_email.errors %}<div class="form-errors">{{ form.customer_email.errors|join:", " }}</div>{% endif %}
+                </div>
+                <div class="form-field">
+                    <label>Адрес доставки <span class="muted">(необязательно)</span></label>
+                    {{ form.delivery_address }}
+                </div>
+                <div class="form-field">
+                    <label>Комментарий</label>
+                    {{ form.comment }}
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Отправить заявку</button>
+                <p class="form-note">Это заявка, а не оплата. Менеджер свяжется с вами, чтобы согласовать детали и стоимость.</p>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

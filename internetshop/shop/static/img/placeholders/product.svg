@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="ESTIVO — фото товара">
+  <defs>
+    <pattern id="weave" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="40" height="40" fill="#f2ede6"/>
+      <path d="M0 10 h40 M0 30 h40" stroke="#e0d5c6" stroke-width="6"/>
+      <path d="M10 0 v40 M30 0 v40" stroke="#e8dfd2" stroke-width="6"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="600" fill="url(#weave)"/>
+  <text x="400" y="300" font-family="Georgia, serif" font-size="52" letter-spacing="10"
+        fill="#b9ab98" text-anchor="middle" dominant-baseline="middle">ESTIVO</text>
+  <text x="400" y="345" font-family="Arial, sans-serif" font-size="18" letter-spacing="4"
+        fill="#c4b7a5" text-anchor="middle">ФОТО ГОТОВИТСЯ</text>
+</svg>

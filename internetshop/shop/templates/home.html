@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero">
+    <div class="hero__bg">
+        <img src="{% static 'img/placeholders/hero.svg' %}" alt="Плетёная мебель ESTIVO на террасе">
+    </div>
+    <div class="container hero__content">
+        <h1>Мебель, которая делает пространство местом, куда хочется возвращаться</h1>
+        <p class="hero__sub">Элитная плетёная мебель ручной работы для дома, дачи и бизнеса. Собственное производство полного цикла.</p>
+        <div class="hero__actions">
+            <a href="{% url 'catalog_list' %}" class="btn btn-primary btn-lg">Смотреть коллекции и цены</a>
+            <a href="{% url 'contacts_page' %}" class="btn btn-light btn-lg">Консультация</a>
+        </div>
+    </div>
+</section>
+
+<!-- 3 СЦЕНАРИЯ -->
+<section class="section">
+    <div class="container">
+        <div class="section-head center">
+            <span class="eyebrow">С чего начать</span>
+            <h2>Выберите свой сценарий</h2>
+        </div>
+        <div class="grid grid-3">
+            {% for seg in segments %}
+            <div class="segment-card" data-reveal>
+                <span class="segment-card__num">0{{ forloop.counter }}</span>
+                <h3>{{ seg.title }}</h3>
+                <p>{{ seg.description }}</p>
+                <a href="{% url seg.cta_url_name %}" class="btn btn-outline">{{ seg.cta_text }}</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- КОЛЛЕКЦИИ / ВИТРИНА (фото + цены выше сгиба) -->
+{% if collections or featured_products %}
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-head">
+            <span class="eyebrow">Витрина</span>
+            <h2>Коллекции с ценами</h2>
+            <p class="lead">Крупные фото, честные цены «от» и понятный выбор — без долгих рассказов.</p>
+        </div>
+
+        {% if featured_products %}
+        <div class="grid grid-4">
+            {% for product in featured_products %}
+                {% include 'partials/_product_card.html' %}
+            {% endfor %}
+        </div>
+        <div style="text-align:center; margin-top:var(--space-5);">
+            <a href="{% url 'catalog_list' %}" class="btn btn-primary btn-lg">Весь каталог</a>
+        </div>
+        {% else %}
+        <div class="grid grid-3">
+            {% for c in collections %}
+            <a href="{% url 'catalog_list' %}" class="segment-card" data-reveal>
+                <h3>{{ c.name }}</h3>
+                <p>{{ c.description|truncatewords:18 }}</p>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+
+<!-- УТП -->
+<section class="section">
+    <div class="container">
+        <div class="usp-grid">
+            <div class="usp" data-reveal><div class="usp__value">3 года</div><div class="usp__label">гарантия на изделия</div></div>
+            <div class="usp" data-reveal><div class="usp__value">от 3 дней</div><div class="usp__label">доставка по России</div></div>
+            <div class="usp" data-reveal><div class="usp__value">120 кг</div><div class="usp__label">на посадочное место</div></div>
+            <div class="usp" data-reveal><div class="usp__value">−70…+70°C</div><div class="usp__label">любой климат</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ПРОИЗВОДСТВО -->
+<section class="section section-dark">
+    <div class="container">
+        <div class="section-head">
+            <span class="eyebrow">Производство полного цикла</span>
+            <h2>Как мы создаём мебель</h2>
+        </div>
+        <div class="timeline">
+            {% for title, text in production_steps %}
+            <div class="timeline__step" data-reveal>
+                <span class="timeline__num">0{{ forloop.counter }}</span>
+                <h4>{{ title }}</h4>
+                <p style="color:rgba(244,239,232,0.7);">{{ text }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ОТЗЫВЫ (сразу после производства, не в самом низу) -->
+{% if reviews %}
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-head center">
+            <span class="eyebrow">Нам доверяют</span>
+            <h2>Отзывы клиентов</h2>
+        </div>
+        <div class="grid grid-3">
+            {% for review in reviews %}
+            <div class="review-card" data-reveal>
+                <div class="review-card__stars">{% for _ in "12345"|make_list %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+                <p class="review-card__text">«{{ review.text|truncatewords:24 }}»</p>
+                <div class="review-card__author">{{ review.author }}</div>
+                {% if review.usage_duration %}<div class="review-card__meta">Использует: {{ review.usage_duration }}</div>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- FAQ -->
+<section class="section">
+    <div class="container container-narrow">
+        <div class="section-head center">
+            <span class="eyebrow">Вопросы и ответы</span>
+            <h2>Коротко о главном</h2>
+        </div>
+        <div class="accordion">
+            {% for question, answer in faq_items %}
+            <div class="accordion-item">
+                <button class="accordion-trigger" type="button">{{ question }}<span class="icon">+</span></button>
+                <div class="accordion-panel"><div class="accordion-panel-inner">{{ answer }}</div></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% include 'partials/_cta_section.html' %}
+{% endblock %}

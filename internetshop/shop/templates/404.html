@@ -1,16 +1,19 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'style.css' %}">
+{% extends 'base.html' %}
 
-<div class="navigation">
+{% block meta_title %}Страница не найдена | ESTIVO{% endblock %}
 
-<h1><span style="color: #00ff00">Banana</span>Shop</h1>
-
-<a class="navlink" href="/">Главная</a>
-<a class="navlink" href="/products">Товары</a>
-
-
-</div>
-
-<div style="width: 30%; text-align: center; margin-left: auto; margin-right: auto">
-    <h1>Страница не найдена. Как ты сюда попал?</h1>
-</div>
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="confirm">
+            <div class="confirm__icon">404</div>
+            <h1>Страница не найдена</h1>
+            <p class="lead">Похоже, такой страницы не существует или она была перемещена.</p>
+            <div style="margin-top:var(--space-4);">
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">На главную</a>
+                <a href="{% url 'catalog_list' %}" class="btn btn-outline btn-lg">В каталог</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

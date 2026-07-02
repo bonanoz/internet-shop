@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Заявка принята | ESTIVO{% endblock %}
+{% block meta_description %}Ваша заявка принята. Менеджер ESTIVO свяжется с вами в ближайшее время.{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="confirm">
+            <div class="confirm__icon">✓</div>
+            <h1>Заявка принята</h1>
+            <p class="lead">Спасибо! Мы получили вашу заявку и свяжемся с вами в ближайшее время, чтобы согласовать детали, стоимость и сроки.</p>
+            <div style="display:flex; gap:var(--space-3); justify-content:center; flex-wrap:wrap; margin-top:var(--space-4);">
+                <a href="{% url 'catalog_list' %}" class="btn btn-primary btn-lg">Продолжить просмотр</a>
+                <a href="{% url 'home' %}" class="btn btn-outline btn-lg">На главную</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

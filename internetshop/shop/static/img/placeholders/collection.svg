@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="ESTIVO — коллекция">
+  <defs>
+    <pattern id="weave3" width="46" height="46" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="46" height="46" fill="#ece2d4"/>
+      <path d="M0 12 h46 M0 34 h46" stroke="#d8c8b2" stroke-width="7"/>
+      <path d="M12 0 v46 M34 0 v46" stroke="#e2d5c2" stroke-width="7"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="1000" fill="url(#weave3)"/>
+  <text x="400" y="500" font-family="Georgia, serif" font-size="46" letter-spacing="8"
+        fill="#b3a48f" text-anchor="middle" dominant-baseline="middle">КОЛЛЕКЦИЯ</text>
+</svg>

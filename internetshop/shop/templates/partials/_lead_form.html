@@ -1,0 +1,29 @@
+{% comment %}
+Переиспользуемая лид-форма. Ожидает в контексте `form` (LeadForm).
+Постит на текущий URL (страницы b2b/designers/contacts обрабатывают POST сами).
+{% endcomment %}
+<form method="post" class="lead-form" data-once>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+
+    <div class="form-field">
+        {{ form.name }}
+        {% if form.name.errors %}<div class="form-errors">{{ form.name.errors|join:", " }}</div>{% endif %}
+    </div>
+    <div class="form-field">
+        {{ form.phone }}
+        {% if form.phone.errors %}<div class="form-errors">{{ form.phone.errors|join:", " }}</div>{% endif %}
+    </div>
+    <div class="form-field">
+        {{ form.email }}
+        {% if form.email.errors %}<div class="form-errors">{{ form.email.errors|join:", " }}</div>{% endif %}
+    </div>
+    <div class="form-field">
+        {{ form.message }}
+        {% if form.message.errors %}<div class="form-errors">{{ form.message.errors|join:", " }}</div>{% endif %}
+    </div>
+    {{ form.lead_type }}
+
+    <button type="submit" class="btn btn-primary btn-block btn-lg">Оставить заявку</button>
+    <p class="form-note">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных.</p>
+</form>

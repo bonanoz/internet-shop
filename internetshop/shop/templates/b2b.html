@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_title %}Мебель для ресторанов, отелей и кафе — оптом от производителя | ESTIVO{% endblock %}
+{% block meta_description %}Плетёная мебель для отелей, ресторанов, кафе и гостевых домов от производителя ESTIVO. Объёмы, сроки, гарантия, коммерческое предложение под ваш проект.{% endblock %}
+
+{% block content %}
+<section class="section-sm">
+    <div class="container">
+        <div class="section-head">
+            <span class="eyebrow">Для бизнеса</span>
+            <h1>Оснащение отелей, ресторанов и кафе</h1>
+            <p class="lead">Партнёрство с ESTIVO — знак статуса. Комплексно оснащаем террасы, лаунж-зоны и общественные пространства мебелью, которая выдерживает интенсивную эксплуатацию.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section-sm">
+    <div class="container">
+        <div class="usp-grid">
+            <div class="usp"><div class="usp__value">Объёмы</div><div class="usp__label">производство под проект любого масштаба</div></div>
+            <div class="usp"><div class="usp__value">Сроки</div><div class="usp__label">прозрачный график изготовления</div></div>
+            <div class="usp"><div class="usp__value">Гарантия 3 года</div><div class="usp__label">на всю партию</div></div>
+            <div class="usp"><div class="usp__value">КП</div><div class="usp__label">коммерческое предложение под задачу</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="split">
+            <div class="split__media"><img src="{% static 'img/placeholders/hero.svg' %}" alt="Мебель ESTIVO для бизнеса"></div>
+            <div>
+                <span class="eyebrow">Почему ESTIVO</span>
+                <h2>Мебель, которая становится частью вашего успеха</h2>
+                <ul>
+                    <li>Производство полного цикла: плетение, сварка, порошковая окраска.</li>
+                    <li>Материалы для улицы: −70…+70°C, влага, солнце, интенсивная нагрузка.</li>
+                    <li>Индивидуальные размеры, цвета и брендирование под ваш интерьер.</li>
+                    <li>Доставка и логистика по всей России.</li>
+                </ul>
+                <a href="#zayavka" class="btn btn-primary btn-lg" style="margin-top:var(--space-3);">Запросить коммерческое предложение</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt" id="zayavka">
+    <div class="container container-narrow">
+        <div class="section-head center">
+            <span class="eyebrow">Заявка на КП</span>
+            <h2>Расскажите о вашем объекте</h2>
+            <p class="lead">Опишите задачу — рассчитаем стоимость и сроки под ваш проект.</p>
+        </div>
+        {% include 'partials/_lead_form.html' %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_title %}{{ product.name }}{% if product.material %} из {{ product.material.name|lower }}{% endif %} | ESTIVO{% endblock %}
+{% block meta_description %}{{ product.short_description|default:product.description|truncatewords:24 }}{% endblock %}
+{% block og_title %}{{ product.name }}{% if product.material %} из {{ product.material.name|lower }}{% endif %}{% endblock %}
+{% block og_image %}{% if product.main_image %}{{ request.scheme }}://{{ request.get_host }}{{ product.main_image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/placeholders/product.svg' %}{% endif %}{% endblock %}
+
+{% block content %}
+<section class="section-sm">
+    <div class="container">
+        {% include 'partials/_breadcrumbs.html' with crumbs=breadcrumbs %}
+
+        <div class="product-detail">
+            <!-- Галерея -->
+            <div class="gallery">
+                <div class="gallery__main">
+                    {% if product.main_image %}
+                    <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                    <img src="{% static 'img/placeholders/product.svg' %}" alt="{{ product.name }}">
+                    {% endif %}
+                </div>
+                {% if product.gallery.all %}
+                <div class="gallery__thumbs">
+                    {% if product.main_image %}<img src="{{ product.main_image.url }}" data-full="{{ product.main_image.url }}" class="active" alt="{{ product.name }}">{% endif %}
+                    {% for img in product.gallery.all %}
+                    <img src="{{ img.image.url }}" data-full="{{ img.image.url }}" alt="{{ product.name }} — фото {{ forloop.counter }}">
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Инфо -->
+            <div>
+                {% if product.material %}<div class="product-card__meta">{{ product.material.name }}{% if product.category %} · {{ product.category.name }}{% endif %}</div>{% endif %}
+                <h1 style="font-size:clamp(2rem,3.5vw,2.8rem);">{{ product.name }}</h1>
+                <div class="product-detail__price">
+                    {% if product.old_price %}<span class="product-card__old">{{ product.old_price }} ₽</span>{% endif %}
+                    <small style="font-family:var(--font-body);font-size:1rem;color:var(--color-ink-muted);">от</small> {{ product.price }} ₽
+                </div>
+
+                {% if product.short_description %}<p class="lead">{{ product.short_description }}</p>{% endif %}
+
+                <ul class="spec-list">
+                    <li><span>Нагрузка</span><span>до {{ product.max_load_kg }} кг</span></li>
+                    <li><span>Гарантия</span><span>{{ product.warranty_years }} года</span></li>
+                    <li><span>Температура эксплуатации</span><span>{{ product.temp_min_c }}…+{{ product.temp_max_c }}°C</span></li>
+                    <li><span>Наличие</span><span>{% if product.is_available %}В наличии / под заказ{% else %}Под заказ{% endif %}</span></li>
+                </ul>
+
+                <div style="display:flex; gap:var(--space-3); flex-wrap:wrap;">
+                    <a href="{% url 'order_create' product.id %}" class="btn btn-primary btn-lg">Оформить заявку</a>
+                    <a href="tel:{{ site_info.phone_href }}" class="btn btn-outline btn-lg">Позвонить</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Описание -->
+        <div class="prose" style="margin-top:var(--space-6);">
+            <h2>Описание</h2>
+            <p style="white-space:pre-line;">{{ product.description }}</p>
+        </div>
+
+        <!-- Отзывы товара -->
+        {% if reviews %}
+        <div style="margin-top:var(--space-6);">
+            <h2>Отзывы</h2>
+            <div class="grid grid-3">
+                {% for review in reviews %}
+                <div class="review-card">
+                    <div class="review-card__stars">{% for _ in "12345"|make_list %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+                    <p class="review-card__text">«{{ review.text|truncatewords:24 }}»</p>
+                    <div class="review-card__author">{{ review.author }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Похожие товары -->
+{% if related_products %}
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-head"><span class="eyebrow">Вам может подойти</span><h2>Похожие изделия</h2></div>
+        <div class="grid grid-4">
+            {% for product in related_products %}
+                {% include 'partials/_product_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/product-gallery.js' %}" defer></script>
+{% endblock %}

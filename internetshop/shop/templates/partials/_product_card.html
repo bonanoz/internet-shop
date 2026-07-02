@@ -1,0 +1,23 @@
+{% load static %}
+<article class="product-card" data-reveal>
+    <a href="{{ product.get_absolute_url }}" class="product-card__media">
+        {% if product.old_price %}<span class="badge">Акция</span>{% endif %}
+        {% if product.main_image %}
+        <img src="{{ product.main_image.url }}" alt="{{ product.name }}" loading="lazy">
+        {% else %}
+        <img src="{% static 'img/placeholders/product.svg' %}" alt="{{ product.name }}" loading="lazy">
+        {% endif %}
+    </a>
+    <div class="product-card__body">
+        {% if product.material %}<div class="product-card__meta">{{ product.material.name }}{% if product.category %} · {{ product.category.name }}{% endif %}</div>{% endif %}
+        <h3 class="product-card__title"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+        {% if product.short_description %}<p class="product-card__desc">{{ product.short_description }}</p>{% endif %}
+        <div class="product-card__foot">
+            <div class="product-card__price">
+                {% if product.old_price %}<span class="product-card__old">{{ product.old_price }} ₽</span>{% endif %}
+                <small>от</small> {{ product.price }} ₽
+            </div>
+            <a href="{{ product.get_absolute_url }}" class="btn btn-outline" style="padding:10px 20px;">Подробнее</a>
+        </div>
+    </div>
+</article>

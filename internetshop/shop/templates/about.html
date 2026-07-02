@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_title %}О компании и производстве плетёной мебели | ESTIVO{% endblock %}
+{% block meta_description %}ESTIVO — производитель плетёной мебели ручной работы полного цикла: плетение, сварка, порошковая окраска. Более 10 лет создаём мебель премиум-класса.{% endblock %}
+
+{% block content %}
+<section class="section-sm">
+    <div class="container">
+        <div class="section-head">
+            <span class="eyebrow">О бренде</span>
+            <h1>ESTIVO — Rolls-Royce среди мебели для открытых пространств</h1>
+            <p class="lead">Более 10 лет мы создаём плетёную мебель ручной работы, которая работает на результат ваших проектов. Собственное производство полного цикла — от идеи до реализации под ключ.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="split">
+            <div class="split__media"><img src="{% static 'img/placeholders/hero.svg' %}" alt="Производство ESTIVO"></div>
+            <div>
+                <span class="eyebrow">Философия</span>
+                <h2>Каждое изделие — инвестиция в атмосферу</h2>
+                <p>Каждое изделие создаётся как единственное: десятки испытаний, тысячи часов ручной работы. Мы скрыли технологии внутри, чтобы вы чувствовали только комфорт, а не заботы об уходе.</p>
+                <p>Инвестируя в подлинное качество сегодня, вы обставляете пространство предметами, которые не потребуют замены через два сезона.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Материалы -->
+{% if materials %}
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-head"><span class="eyebrow">Материалы</span><h2>Из чего мы делаем мебель</h2></div>
+        <div class="grid grid-2">
+            {% for m in materials %}
+            <div class="segment-card" data-reveal>
+                <h3>{{ m.name }}</h3>
+                <p>{{ m.description|default:"Описание материала готовится." }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Производство -->
+<section class="section section-dark">
+    <div class="container">
+        <div class="section-head"><span class="eyebrow">Производство полного цикла</span><h2>8 этапов создания мебели</h2></div>
+        <div class="timeline">
+            {% for title, text in production_steps %}
+            <div class="timeline__step" data-reveal>
+                <span class="timeline__num">0{{ forloop.counter }}</span>
+                <h4>{{ title }}</h4>
+                <p style="color:rgba(244,239,232,0.7);">{{ text }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% include 'partials/_cta_section.html' %}
+{% endblock %}

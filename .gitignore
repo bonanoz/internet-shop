@@ -1,4 +1,18 @@
+
 .venv/
+venv/
+
 internetshop/db.sqlite3
-.gitignore/
+
+.env
 internetshop/shop/config.py
+
+# MCP-конфиг ZCode/OpenCode с реальным connection string к PostgreSQL — содержит секреты
+opencode.json
+
+__pycache__/
+*.pyc
+
+.idea/
+
+internetshop/staticfiles/

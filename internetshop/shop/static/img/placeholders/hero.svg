@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="ESTIVO — плетёная мебель на террасе">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c9a77f"/>
+      <stop offset="45%" stop-color="#b98a5e"/>
+      <stop offset="100%" stop-color="#6f5138"/>
+    </linearGradient>
+    <pattern id="weave2" width="60" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="60" height="60" fill="#5a4230" opacity="0.0"/>
+      <path d="M0 15 h60 M0 45 h60" stroke="#3d2c1e" stroke-width="8" opacity="0.35"/>
+      <path d="M15 0 v60 M45 0 v60" stroke="#4a3625" stroke-width="8" opacity="0.35"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <rect y="620" width="1600" height="380" fill="url(#weave2)"/>
+  <rect y="620" width="1600" height="380" fill="#4a3625" opacity="0.25"/>
+  <circle cx="1250" cy="240" r="120" fill="#e8cfa0" opacity="0.5"/>
+  <text x="120" y="520" font-family="Georgia, serif" font-size="150" letter-spacing="30"
+        fill="#f7efe4" opacity="0.9">ESTIVO</text>
+</svg>
