@@ -1,32 +1,41 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block meta_title %}Оформление заявки — {{ product.name }} | ESTIVO{% endblock %}
-{% block meta_description %}Оформление заявки на {{ product.name }}. Менеджер свяжется с вами для уточнения деталей.{% endblock %}
+{% block meta_title %}Оформление заявки | ESTIVO{% endblock %}
+{% block meta_description %}Оформление заявки на подобранную мебель ESTIVO. Менеджер свяжется с вами для согласования деталей и стоимости.{% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="container">
-        <div class="section-head"><span class="eyebrow">Заявка на товар</span><h1>Оформление заявки</h1></div>
+        <div class="section-head"><span class="eyebrow">Заявка из корзины</span><h1>Оформление заявки</h1></div>
 
         <div class="order-layout">
-            <!-- Сводка по товару -->
-            <div class="order-summary">
-                <div class="order-summary__media">
-                    {% if product.main_image %}
-                    <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
-                    {% else %}
-                    <img src="{% static 'img/placeholders/product.svg' %}" alt="{{ product.name }}">
-                    {% endif %}
+            <!-- Сводка по корзине -->
+            <div class="checkout-summary">
+                {% for item in cart %}
+                <div class="checkout-line">
+                    <div class="checkout-line__media">
+                        {% if item.product.main_image %}
+                        <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                        <img src="{% static 'img/placeholders/product.svg' %}" alt="{{ item.product.name }}">
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div class="checkout-line__title">{{ item.product.name }} × {{ item.quantity }}</div>
+                        {% if item.colors_display %}
+                        <div class="checkout-line__colors">
+                            {% for label, name in item.colors_display %}{{ label }}: {{ name }}{% if not forloop.last %} · {% endif %}{% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="checkout-line__total">{{ item.line_total }} ₽</div>
                 </div>
-                <div class="order-summary__body">
-                    {% if product.material %}<div class="product-card__meta">{{ product.material.name }}{% if product.category %} · {{ product.category.name }}{% endif %}</div>{% endif %}
-                    <h3>{{ product.name }}</h3>
-                    <div class="product-detail__price" style="font-size:1.8rem;"><small style="font-family:var(--font-body);font-size:0.9rem;color:var(--color-ink-muted);">от</small> {{ product.price }} ₽</div>
-                </div>
+                {% endfor %}
+                <div class="checkout-total"><span>Итого</span><span>{{ cart.total_price }} ₽</span></div>
             </div>
 
-            <!-- Форма -->
+            <!-- Форма контактов -->
             <form method="post" class="lead-form" data-once>
                 {% csrf_token %}
                 {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}

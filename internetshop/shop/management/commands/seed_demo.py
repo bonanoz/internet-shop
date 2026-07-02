@@ -1,7 +1,36 @@
 from django.core.management.base import BaseCommand
 
-from shop.models import Category, Collection, Material, Product, Review
+from shop.models import Category, Collection, ColorOption, Material, Product, Review
 from shop.utils import ru_slugify
+
+# Цвета отделки: (название, тип, hex). Тип — weave/cushion/frame.
+COLORS = [
+    ('Графит', ColorOption.WEAVE, '#3b3a36'),
+    ('Мокко', ColorOption.WEAVE, '#6f5b45'),
+    ('Слоновая кость', ColorOption.WEAVE, '#e8e0d2'),
+    ('Терракота', ColorOption.WEAVE, '#b5623a'),
+    ('Беж', ColorOption.CUSHION, '#d9cbb3'),
+    ('Графитовый лён', ColorOption.CUSHION, '#4a4a45'),
+    ('Олива', ColorOption.CUSHION, '#6b6f4f'),
+    ('Чёрный муар', ColorOption.FRAME, '#1c1c1c'),
+    ('Белый', ColorOption.FRAME, '#f2f2ef'),
+    ('Сталь', ColorOption.FRAME, '#8a8d90'),
+]
+
+# Габариты демо-товаров: название → (длина, ширина, высота, вес) в см и кг.
+DIMENSIONS = {
+    'Кресло «Кокон»': (100, 100, 195, 18),
+    'Диван «Ривьера»': (210, 85, 80, 42),
+    'Кресло «Прованс»': (65, 70, 90, 12),
+    'Комплект «Азоре»': (240, 80, 85, 75),
+    'Стол обеденный «Соренто»': (180, 90, 75, 40),
+    'Шезлонг «Малибу»': (195, 65, 35, 16),
+    'Столик кофейный «Верона»': (60, 60, 45, 9),
+    'Кресло «Барселона»': (70, 72, 100, 13),
+}
+
+# Категории с мягкими элементами — им доступны цвета подушек.
+SOFT_CATEGORIES = {'Кресла', 'Диваны', 'Комплекты', 'Шезлонги', 'Подвесные кресла'}
 
 MATERIALS = [
     ('Роуп', 'Роуп дарит мягкость и уют даже в уличных пространствах: мебель выглядит так же изысканно, как и внутри дома.'),
@@ -67,6 +96,15 @@ class Command(BaseCommand):
             )
             collections[name] = col
 
+        # Цвета отделки, сгруппированные по типу для привязки к товарам.
+        colors_by_type = {ColorOption.WEAVE: [], ColorOption.CUSHION: [], ColorOption.FRAME: []}
+        for i, (cname, finish_type, hex_code) in enumerate(COLORS):
+            color, _ = ColorOption.objects.get_or_create(
+                name=cname, finish_type=finish_type,
+                defaults={'hex': hex_code, 'order': i},
+            )
+            colors_by_type[finish_type].append(color)
+
         products = {}
         for name, mat, cat, col, price, desc in PRODUCTS:
             p, _ = Product.objects.get_or_create(
@@ -85,6 +123,21 @@ class Command(BaseCommand):
             )
             products[name] = p
 
+            # Габариты (перезаписываем на демо-значения при каждом прогоне).
+            dims = DIMENSIONS.get(name)
+            if dims:
+                p.length_cm, p.width_cm, p.height_cm, p.weight_kg = dims
+                p.save(update_fields=['length_cm', 'width_cm', 'height_cm', 'weight_kg'])
+
+            # Привязка палитр: плетение — всем; подушки — мягкой мебели;
+            # каркас — всем, кроме ротанга (следуя ТЗ владельца).
+            available = list(colors_by_type[ColorOption.WEAVE])
+            if cat in SOFT_CATEGORIES:
+                available += colors_by_type[ColorOption.CUSHION]
+            if mat != 'Ротанг':
+                available += colors_by_type[ColorOption.FRAME]
+            p.available_colors.set(available)
+
         for prod_name, author, rating, duration, text in REVIEWS:
             product = products.get(prod_name)
             if product:
@@ -95,5 +148,6 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS(
             f'Готово: {Material.objects.count()} материалов, {Category.objects.count()} категорий, '
-            f'{Product.objects.count()} товаров, {Review.objects.count()} отзывов.'
+            f'{Product.objects.count()} товаров, {ColorOption.objects.count()} цветов, '
+            f'{Review.objects.count()} отзывов.'
         ))

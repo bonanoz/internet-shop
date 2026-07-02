@@ -1,12 +1,19 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 
+from .cart import Cart
 from .forms import LeadForm, OrderForm
-from .models import Category, Collection, Material, Product, Review
+from .models import Category, Collection, ColorOption, Material, OrderItem, Product, Review
 from .utils import notify_telegram
+
+
+def _is_ajax(request):
+    return request.headers.get('x-requested-with') == 'XMLHttpRequest'
 
 PRODUCTION_STEPS = [
     ('Заявка и консультация', 'Обсуждаем задачу, бюджет и сроки — по телефону или на встрече.'),
@@ -194,29 +201,121 @@ def contacts_page(request):
     return _lead_page(request, 'contacts.html', 'private')
 
 
-def order_create(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+def _parse_colors(request, product):
+    """Считать выбранные цвета из POST и провалидировать по available_colors.
+
+    Возвращает ``{finish_type: color_id}`` только для цветов, реально
+    привязанных к товару, — подмену чужого color_id из формы отсекаем.
+    """
+    available = {c.id: c for c in product.available_colors.all()}
+    colors = {}
+    for finish_type, _label in ColorOption.FINISH_TYPE_CHOICES:
+        raw = request.POST.get(f'color_{finish_type}')
+        if not raw:
+            continue
+        try:
+            color_id = int(raw)
+        except (TypeError, ValueError):
+            continue
+        color = available.get(color_id)
+        if color is not None and color.finish_type == finish_type:
+            colors[finish_type] = color_id
+    return colors
+
+
+@require_POST
+def cart_add(request, product_id):
+    product = get_object_or_404(Product, id=product_id, is_available=True)
+    colors = _parse_colors(request, product)
+    try:
+        quantity = max(1, int(request.POST.get('quantity', 1)))
+    except (TypeError, ValueError):
+        quantity = 1
+    cart = Cart(request)
+    cart.add(product, colors=colors, quantity=quantity)
+    if _is_ajax(request):
+        return JsonResponse({'count': cart.count, 'total_price': cart.total_price})
+    if 'checkout' in request.POST:
+        return redirect('checkout')
+    return redirect(request.POST.get('next') or 'cart_detail')
+
+
+@require_POST
+def cart_update(request):
+    line_id = request.POST.get('line_id')
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except (TypeError, ValueError):
+        quantity = 1
+    cart = Cart(request)
+    cart.set_quantity(line_id, quantity)
+    if _is_ajax(request):
+        return JsonResponse({
+            'count': cart.count,
+            'total_price': cart.total_price,
+            'removed': quantity <= 0,
+        })
+    return redirect('cart_detail')
+
+
+@require_POST
+def cart_remove(request):
+    cart = Cart(request)
+    cart.remove(request.POST.get('line_id'))
+    if _is_ajax(request):
+        return JsonResponse({'count': cart.count, 'total_price': cart.total_price})
+    return redirect('cart_detail')
+
+
+def cart_detail(request):
+    return render(request, 'cart.html')
+
+
+def checkout(request):
+    cart = Cart(request)
+    if cart.is_empty:
+        return redirect('cart_detail')
 
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            order = form.save(commit=False)
-            order.product = product
-            order.save()
+            items = list(cart)
+            order = form.save()
+            for item in items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item['product'],
+                    quantity=item['quantity'],
+                    unit_price=item['unit_price'],
+                    selected_colors=dict(item['colors_display']),
+                )
+            order.recalc_total()
+
+            lines = []
+            for item in items:
+                colors_str = ', '.join(f'{label}: {name}' for label, name in item['colors_display'])
+                suffix = f' ({colors_str})' if colors_str else ''
+                lines.append(
+                    f'• {item["product"].name} × {item["quantity"]} — {item["line_total"]} ₽{suffix}'
+                )
             sent = notify_telegram(
-                f'📦 Новая заявка на товар: {product.name}\n'
-                f'💸 Цена: {order.total_price} рублей\n'
-                f'ФИО: {order.customer_name}\nТелефон: {order.customer_phone}\n'
-                f'Адрес доставки: {order.delivery_address}\nКомментарий: {order.comment}'
+                '🛒 Новая заявка из корзины\n'
+                + '\n'.join(lines)
+                + f'\n\nИтого: {order.total_price} ₽\n'
+                + f'ФИО: {order.customer_name}\nТелефон: {order.customer_phone}\n'
+                + f'Email: {order.customer_email}\nАдрес доставки: {order.delivery_address}\n'
+                + f'Комментарий: {order.comment}'
             )
             if sent:
                 order.telegram_notified = True
                 order.save(update_fields=['telegram_notified'])
+
+            cart.clear()
             return redirect('order_success')
     else:
         form = OrderForm()
 
-    return render(request, 'order_form.html', {'product': product, 'form': form})
+    return render(request, 'checkout.html', {'form': form})
 
 
 def order_success(request):
