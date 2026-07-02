@@ -12,8 +12,17 @@
         {% include 'partials/_breadcrumbs.html' with crumbs=breadcrumbs %}
 
         <div class="product-detail">
-            <!-- Галерея -->
+            <!-- Галерея / 3D-модель -->
             <div class="gallery">
+                {% if product.model_3d %}
+                <div class="product-3d" data-model-3d>
+                    <model-viewer
+                        src="{{ product.model_3d.url }}"
+                        {% if product.model_3d_poster %}poster="{{ product.model_3d_poster.url }}"{% endif %}
+                        camera-controls auto-rotate shadow-intensity="1" exposure="1"
+                        alt="{{ product.name }} — 3D-модель"></model-viewer>
+                </div>
+                {% else %}
                 <div class="gallery__main">
                     {% if product.main_image %}
                     <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
@@ -28,6 +37,7 @@
                     <img src="{{ img.image.url }}" data-full="{{ img.image.url }}" alt="{{ product.name }} — фото {{ forloop.counter }}">
                     {% endfor %}
                 </div>
+                {% endif %}
                 {% endif %}
             </div>
 
@@ -46,13 +56,37 @@
                     <li><span>Нагрузка</span><span>до {{ product.max_load_kg }} кг</span></li>
                     <li><span>Гарантия</span><span>{{ product.warranty_years }} года</span></li>
                     <li><span>Температура эксплуатации</span><span>{{ product.temp_min_c }}…+{{ product.temp_max_c }}°C</span></li>
+                    {% if product.length_cm or product.width_cm or product.height_cm %}
+                    <li><span>Габариты (Д×Ш×В)</span><span>{{ product.length_cm|default:"—" }} × {{ product.width_cm|default:"—" }} × {{ product.height_cm|default:"—" }} см</span></li>
+                    {% endif %}
+                    {% if product.weight_kg %}<li><span>Вес</span><span>{{ product.weight_kg }} кг</span></li>{% endif %}
                     <li><span>Наличие</span><span>{% if product.is_available %}В наличии / под заказ{% else %}Под заказ{% endif %}</span></li>
                 </ul>
 
-                <div style="display:flex; gap:var(--space-3); flex-wrap:wrap;">
-                    <a href="{% url 'order_create' product.id %}" class="btn btn-primary btn-lg">Оформить заявку</a>
-                    <a href="tel:{{ site_info.phone_href }}" class="btn btn-outline btn-lg">Позвонить</a>
-                </div>
+                <form method="post" action="{% url 'cart_add' product.id %}" class="js-cart-form" data-cart-action="add">
+                    {% csrf_token %}
+
+                    {% for label, finish_type, options in product.colors_by_type %}
+                    <div class="color-config">
+                        <div class="color-group" data-finish="{{ finish_type }}">
+                            <span class="color-group__label">{{ label }}: <span class="color-group__value">{{ options.0.name }}</span></span>
+                            <div class="swatches">
+                                {% for color in options %}
+                                <label class="swatch" title="{{ color.name }}">
+                                    <input type="radio" name="color_{{ finish_type }}" value="{{ color.id }}" data-name="{{ color.name }}" data-hex="{{ color.hex }}"{% if forloop.first %} checked{% endif %}>
+                                    <span class="swatch__dot" style="{% if color.swatch_image %}background-image:url('{{ color.swatch_image.url }}');{% else %}background-color:{{ color.hex }};{% endif %}"></span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="product-actions">
+                        <button type="submit" class="btn btn-primary btn-lg">В корзину</button>
+                        <button type="submit" name="checkout" value="1" class="btn btn-outline btn-lg" data-no-ajax>Оформить заявку</button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -97,4 +131,6 @@
 
 {% block extra_js %}
 <script src="{% static 'js/product-gallery.js' %}" defer></script>
+{% if product.model_3d %}<script type="module" src="{% static 'js/vendor/model-viewer.min.js' %}"></script>{% endif %}
+<script src="{% static 'js/product-3d.js' %}" defer></script>
 {% endblock %}

@@ -77,6 +77,45 @@ class Collection(models.Model):
         super().save(*args, **kwargs)
 
 
+class ColorOption(models.Model):
+    """Цвет отделки для конфигуратора товара.
+
+    Единый справочник на весь сайт, сгруппированный по типу отделки
+    (плетение / подушки / каркас). Товар подключает нужные цвета через
+    M2M ``Product.available_colors``. На цену не влияет — это только
+    визуальный выбор (swatch на странице товара и базовый цвет 3D-модели).
+    """
+
+    WEAVE = 'weave'
+    CUSHION = 'cushion'
+    FRAME = 'frame'
+    FINISH_TYPE_CHOICES = [
+        (WEAVE, 'Плетение'),
+        (CUSHION, 'Подушки'),
+        (FRAME, 'Каркас'),
+    ]
+
+    name = models.CharField('Название цвета', max_length=64)
+    finish_type = models.CharField('Тип отделки', max_length=16, choices=FINISH_TYPE_CHOICES)
+    hex = models.CharField(
+        'HEX-цвет', max_length=7, default='#cccccc',
+        help_text='Например #3b3a36 — для образца и базового цвета 3D-модели',
+    )
+    swatch_image = models.ImageField(
+        'Образец текстуры', upload_to='colors/', blank=True, null=True,
+        help_text='Необязательно — если задан, показывается вместо однотонного образца',
+    )
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['finish_type', 'order', 'name']
+        verbose_name = 'Цвет отделки'
+        verbose_name_plural = 'Цвета отделки'
+
+    def __str__(self):
+        return f'{self.get_finish_type_display()} — {self.name}'
+
+
 class Product(models.Model):
     name = models.CharField(max_length=128)
     slug = models.SlugField(max_length=160, unique=True, blank=True)
@@ -103,6 +142,27 @@ class Product(models.Model):
     temp_min_c = models.IntegerField('Мин. температура эксплуатации, °C', default=-70)
     temp_max_c = models.IntegerField('Макс. температура эксплуатации, °C', default=70)
 
+    # Габариты (см) и вес (кг) — показываются в характеристиках, если заданы.
+    length_cm = models.IntegerField('Длина, см', null=True, blank=True)
+    width_cm = models.IntegerField('Ширина, см', null=True, blank=True)
+    height_cm = models.IntegerField('Высота, см', null=True, blank=True)
+    weight_kg = models.IntegerField('Вес, кг', null=True, blank=True)
+
+    # Конфигуратор цвета: какие цвета отделки доступны для этого товара.
+    available_colors = models.ManyToManyField(
+        ColorOption, blank=True, related_name='products', verbose_name='Доступные цвета',
+    )
+
+    # 3D-модель (.glb) со сменой цвета материалов. Пока файла нет —
+    # страница товара показывает обычную 2D-галерею (fallback).
+    model_3d = models.FileField(
+        '3D-модель (.glb)', upload_to='models/', blank=True, null=True,
+        help_text='Материалы в модели должны называться weave / cushion / frame',
+    )
+    model_3d_poster = models.ImageField(
+        'Постер 3D-модели', upload_to='models/posters/', blank=True, null=True,
+    )
+
     is_available = models.BooleanField('В наличии/под заказ', default=True)
     is_featured = models.BooleanField('Показывать на главной', default=False)
 
@@ -126,6 +186,20 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('product_detail', args=[self.slug])
+
+    def colors_by_type(self):
+        """Доступные цвета, сгруппированные по типу отделки, в порядке
+        Плетение → Подушки → Каркас. Пустые группы не попадают в результат —
+        товар из ротанга без отдельного каркаса не покажет группу «Каркас».
+        Возвращает список кортежей ``(label, finish_type, [ColorOption, ...])``.
+        """
+        groups = []
+        colors = list(self.available_colors.all())
+        for finish_type, label in ColorOption.FINISH_TYPE_CHOICES:
+            options = [c for c in colors if c.finish_type == finish_type]
+            if options:
+                groups.append((label, finish_type, options))
+        return groups
 
 
 class ProductImage(models.Model):
@@ -168,7 +242,12 @@ class Order(models.Model):
         ('paid', 'Оплачен'),
     ]
 
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='orders')
+    # Заявка теперь многотоварная — позиции лежат в OrderItem (related_name='items').
+    # Поле product оставлено nullable ради старых одно-товарных заявок; новые
+    # заявки из корзины его не заполняют.
+    product = models.ForeignKey(
+        Product, on_delete=models.PROTECT, related_name='orders', null=True, blank=True,
+    )
     customer_name = models.CharField('ФИО', max_length=256)
     customer_phone = models.CharField('Телефон', max_length=32)
     customer_email = models.CharField('Email', max_length=256, blank=True)
@@ -193,9 +272,46 @@ class Order(models.Model):
         return f'Заявка №{self.pk} — {self.customer_name}'
 
     def save(self, *args, **kwargs):
+        # Fallback для старой одно-товарной заявки: если позиций нет, но задан
+        # product — снимаем цену с него. Многотоварные заявки проставляют
+        # total_price во view checkout как сумму позиций.
         if self.total_price is None and self.product_id:
             self.total_price = self.product.price
         super().save(*args, **kwargs)
+
+    def recalc_total(self):
+        """Пересчитать сумму заявки по позициям и сохранить."""
+        self.total_price = sum(item.line_total for item in self.items.all())
+        self.save(update_fields=['total_price'])
+
+
+class OrderItem(models.Model):
+    """Позиция заявки: товар + количество + выбранные цвета отделки.
+
+    ``unit_price`` и ``selected_colors`` — снимки на момент оформления, чтобы
+    историческая заявка не «поплыла» при изменении цены товара или удалении
+    цвета из справочника.
+    """
+
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='order_items')
+    quantity = models.PositiveIntegerField('Количество', default=1)
+    unit_price = models.IntegerField('Цена за штуку', help_text='Снимок цены на момент заявки')
+    selected_colors = models.JSONField(
+        'Выбранные цвета', default=dict, blank=True,
+        help_text='Снимок вида {"Плетение": "Графит", "Подушки": "Беж"}',
+    )
+
+    class Meta:
+        verbose_name = 'Позиция заявки'
+        verbose_name_plural = 'Позиции заявки'
+
+    def __str__(self):
+        return f'{self.product.name} × {self.quantity}'
+
+    @property
+    def line_total(self):
+        return self.unit_price * self.quantity
 
 
 class Lead(models.Model):

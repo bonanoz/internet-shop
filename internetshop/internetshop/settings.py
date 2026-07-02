@@ -35,6 +35,14 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else []
 
+# --- Демо через Cloudflare-туннель (trycloudflare.com) ---
+# Туннель выдаёт случайный поддомен *.trycloudflare.com. Разрешаем его,
+# а также локальные адреса, чтобы сайт открывался и локально, и по ссылке туннеля.
+ALLOWED_HOSTS += ['localhost', '127.0.0.1', '.trycloudflare.com']
+# POST-формы (заявки/лиды) шлют CSRF-токен — домен туннеля должен быть доверенным,
+# иначе Django вернёт 403 при отправке формы.
+CSRF_TRUSTED_ORIGINS = ['https://*.trycloudflare.com']
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -73,6 +81,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processors.site_info',
+                'shop.context_processors.cart',
             ],
         },
     },
@@ -133,6 +142,11 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STORAGES = {
+    # Загруженные файлы (media: фото товаров, .glb-модели). Обязателен —
+    # без ключа 'default' обращение к <файл>.url даёт InvalidStorageError.
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },

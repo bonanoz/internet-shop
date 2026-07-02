@@ -27,3 +27,9 @@ def site_info(request):
     """Контакты, соцсети и реквизиты компании — доступны в любом шаблоне
     без передачи вручную из каждого view (шапка/подвал сайта)."""
     return {'site_info': SITE_INFO}
+
+
+def cart(request):
+    """Корзина — доступна в любом шаблоне (счётчик в шапке на всех страницах)."""
+    from .cart import Cart
+    return {'cart': Cart(request)}

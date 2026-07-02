@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_title %}Корзина | ESTIVO{% endblock %}
+{% block meta_description %}Ваша подборка мебели ESTIVO. Оформите заявку — менеджер свяжется для согласования деталей и стоимости.{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="section-head"><span class="eyebrow">Ваша подборка</span><h1>Корзина</h1></div>
+
+        {% if cart.is_empty %}
+        <div class="cart-empty">
+            <p class="lead">В корзине пока пусто.</p>
+            <a href="{% url 'catalog_list' %}" class="btn btn-primary btn-lg">Перейти в каталог</a>
+        </div>
+        {% else %}
+        <div class="cart-layout">
+            <div class="cart-items">
+                {% for item in cart %}
+                <div class="cart-item" data-line="{{ item.line_id }}" data-unit-price="{{ item.unit_price }}">
+                    <a href="{{ item.product.get_absolute_url }}" class="cart-item__media">
+                        {% if item.product.main_image %}
+                        <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                        <img src="{% static 'img/placeholders/product.svg' %}" alt="{{ item.product.name }}">
+                        {% endif %}
+                    </a>
+                    <div class="cart-item__body">
+                        <h3 class="cart-item__title"><a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a></h3>
+                        {% if item.colors_display %}
+                        <ul class="cart-item__colors">
+                            {% for label, name in item.colors_display %}
+                            <li>{{ label }}: <strong>{{ name }}</strong></li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <div class="cart-item__price"><small>от</small> {{ item.unit_price }} ₽ / шт</div>
+                    </div>
+                    <div class="cart-item__controls">
+                        <form class="qty js-cart-form" method="post" action="{% url 'cart_update' %}" data-cart-action="update">
+                            {% csrf_token %}
+                            <input type="hidden" name="line_id" value="{{ item.line_id }}">
+                            <button type="button" class="qty__btn" data-qty-dec aria-label="Уменьшить">−</button>
+                            <input type="number" name="quantity" class="qty__input" value="{{ item.quantity }}" min="1" inputmode="numeric" aria-label="Количество">
+                            <button type="button" class="qty__btn" data-qty-inc aria-label="Увеличить">+</button>
+                        </form>
+                        <div class="cart-item__total" data-line-total>{{ item.line_total }} ₽</div>
+                        <form method="post" action="{% url 'cart_remove' %}" class="js-cart-form" data-cart-action="remove">
+                            {% csrf_token %}
+                            <input type="hidden" name="line_id" value="{{ item.line_id }}">
+                            <button type="submit" class="cart-item__remove" aria-label="Удалить из корзины">✕</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <aside class="cart-summary">
+                <div class="cart-summary__row"><span>Позиций</span><span data-cart-count>{{ cart.count }}</span></div>
+                <div class="cart-summary__row cart-summary__total"><span>Итого</span><span data-cart-total>{{ cart.total_price }} ₽</span></div>
+                <a href="{% url 'checkout' %}" class="btn btn-primary btn-block btn-lg">Оформить заявку</a>
+                <p class="form-note">Это заявка, а не оплата. Менеджер свяжется с вами, чтобы согласовать детали и стоимость.</p>
+            </aside>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
